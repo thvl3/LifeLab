@@ -1,0 +1,91 @@
+{% extends "life/base.html" %}
+{% load static %}
+
+{% block title %}LifeLab{% endblock %}
+
+{% block extra_head %}
+{{ rulesets|json_script:"rulesets-data" }}
+{{ preset_patterns|json_script:"preset-patterns-data" }}
+{{ saved_patterns|json_script:"saved-patterns-data" }}
+{{ selected_pattern|json_script:"selected-pattern-data" }}
+{% endblock %}
+
+{% block content %}
+<section class="sim-topbar" aria-label="Simulator stats">
+    <div class="hero-metrics">
+        <div><strong id="generationCount">0</strong><span>generation</span></div>
+        <div><strong id="liveCount">0</strong><span>live cells</span></div>
+    </div>
+</section>
+
+<section class="sim-layout">
+    <div class="sim-stage">
+        <canvas id="lifeCanvas" width="960" height="720" aria-label="Game of Life editable grid"></canvas>
+    </div>
+
+    <aside class="control-panel">
+        <section class="control-group">
+            <h2>Run</h2>
+            <div class="button-grid">
+                <button type="button" id="playToggle">Play</button>
+                <button type="button" id="stepButton">Step</button>
+                <button type="button" id="clearButton">Clear</button>
+                <button type="button" id="randomButton">Random</button>
+            </div>
+            <label>Speed
+                <input id="speedRange" type="range" min="40" max="600" value="140">
+            </label>
+            <label>Brush
+                <input id="brushRange" type="range" min="1" max="5" value="1">
+            </label>
+        </section>
+
+        <section class="control-group">
+            <h2>Ruleset</h2>
+            <label>Preset
+                <select id="rulesetSelect">
+                    {% for ruleset in rulesets %}
+                        <option value="{{ ruleset.rule }}">{{ ruleset.name }} · {{ ruleset.rule }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <div class="rule-builder">
+                <div>
+                    <span>Birth</span>
+                    <div id="birthChecks" class="check-row"></div>
+                </div>
+                <div>
+                    <span>Survival</span>
+                    <div id="survivalChecks" class="check-row"></div>
+                </div>
+            </div>
+            <p class="rule-output" id="ruleOutput">B3/S23</p>
+        </section>
+
+        <section class="control-group">
+            <h2>Patterns</h2>
+            <label>Starter
+                <select id="patternSelect"></select>
+            </label>
+            <button type="button" id="stampButton">Stamp center</button>
+            <form method="post" id="savePatternForm" class="save-form">
+                {% csrf_token %}
+                {{ form.name }}
+                {{ form.notes }}
+                {{ form.rule_string }}
+                {{ form.rows }}
+                {{ form.columns }}
+                {{ form.cells_payload }}
+                <button type="submit">Save pattern</button>
+                {% if form.errors %}
+                    <p class="form-error">Pattern could not be saved. Check the name and grid data.</p>
+                {% endif %}
+            </form>
+        </section>
+    </aside>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'life/simulator.js' %}"></script>
+{% endblock %}

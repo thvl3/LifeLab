@@ -1,0 +1,41 @@
+{% extends "life/base.html" %}
+{% load static %}
+
+{% block title %}{{ pattern.name }} · LifeLab{% endblock %}
+
+{% block extra_head %}
+{{ pattern_payload|json_script:"detail-pattern-data" }}
+{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Saved pattern</p>
+        <h1>{{ pattern.name }}</h1>
+        <p class="muted">{{ pattern.rule_string }} · birth {{ rule_parts.birth|join:", " }} · survival {{ rule_parts.survival|join:", " }}</p>
+    </div>
+    <a class="secondary-action" href="{% url 'simulator' %}?pattern={{ pattern.pk }}">Open in simulator</a>
+</section>
+
+<section class="detail-layout">
+    <div class="preview-stage">
+        <canvas id="patternPreview" width="720" height="480" aria-label="Saved pattern preview"></canvas>
+    </div>
+    <aside class="facts-panel">
+        <h2>Pattern data</h2>
+        <dl class="fact-grid">
+            <div><dt>Live cells</dt><dd>{{ pattern.cells|length }}</dd></div>
+            <div><dt>Grid</dt><dd>{{ pattern.columns }}x{{ pattern.rows }}</dd></div>
+            <div><dt>Created</dt><dd>{{ pattern.created_at|date:"M j, Y" }}</dd></div>
+        </dl>
+        {% if pattern.notes %}
+            <h2>Notes</h2>
+            <p>{{ pattern.notes }}</p>
+        {% endif %}
+    </aside>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'life/preview.js' %}"></script>
+{% endblock %}

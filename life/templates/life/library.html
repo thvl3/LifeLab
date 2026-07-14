@@ -1,0 +1,33 @@
+{% extends "life/base.html" %}
+
+{% block title %}LifeLab Library{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Pattern database</p>
+        <h1>{{ pattern_count }} saved pattern{{ pattern_count|pluralize }}</h1>
+    </div>
+    <a class="secondary-action" href="{% url 'simulator' %}">New pattern</a>
+</section>
+
+<section class="library-grid">
+    {% for pattern in patterns %}
+        <article class="pattern-card">
+            <div>
+                <h2><a href="{% url 'pattern_detail' pattern.pk %}">{{ pattern.name }}</a></h2>
+                <p>{{ pattern.rule_string }} · {{ pattern.cells|length }} live cells · {{ pattern.columns }}x{{ pattern.rows }}</p>
+            </div>
+            {% if pattern.notes %}
+                <p class="notes">{{ pattern.notes }}</p>
+            {% endif %}
+            <a class="secondary-action" href="{% url 'simulator' %}?pattern={{ pattern.pk }}">Open in simulator</a>
+        </article>
+    {% empty %}
+        <div class="empty-state">
+            <h2>No saved patterns yet</h2>
+            <p>Create a pattern in the simulator and save it to build the library.</p>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}
