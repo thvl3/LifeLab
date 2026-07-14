@@ -1,5 +1,9 @@
 # LifeLab
 
+## Demo
+
+[![Watch the LifeLab demo](https://img.youtube.com/vi/hUOMykWk9b8/maxresdefault.jpg)](https://youtu.be/hUOMykWk9b8)
+
 ## Overview
 
 LifeLab is a Django web app for experimenting with Conway's Game of Life and related cellular automata rules. Users can draw patterns on a grid, switch rulesets, adjust birth and survival conditions, run the simulation, and save custom patterns to a SQLite database.
