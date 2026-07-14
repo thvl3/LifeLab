@@ -150,6 +150,8 @@ function neighborCount(row, column) {
 }
 
 function step() {
+    // Only live cells and their neighbors can change, so evaluate that small
+    // candidate set instead of scanning every cell on every generation.
     const candidates = new Set();
     state.cells.forEach((cell) => {
         const [row, column] = parseKey(cell);
@@ -193,6 +195,8 @@ function resetGeneration() {
 }
 
 function setCellFromPointer(event) {
+    // Convert the pointer position from the responsive canvas back to the
+    // fixed simulation grid before applying the selected brush size.
     const rect = canvas.getBoundingClientRect();
     const column = Math.floor(((event.clientX - rect.left) / rect.width) * columns);
     const row = Math.floor(((event.clientY - rect.top) / rect.height) * rows);
@@ -306,6 +310,8 @@ function wireEvents() {
     });
 
     els.form.addEventListener("submit", () => {
+        // Copy the live canvas state into hidden Django form fields immediately
+        // before submission so the server saves what the user sees.
         els.ruleString.value = ruleString();
         els.formRows.value = rows;
         els.formColumns.value = columns;

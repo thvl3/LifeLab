@@ -1,3 +1,5 @@
+"""Page views for the LifeLab simulator and saved-pattern library."""
+
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
@@ -7,6 +9,8 @@ from .models import SavedPattern
 
 
 def simulator(request):
+    # The page receives both starter data and database data so the browser can
+    # offer one consistent pattern picker without making extra API requests.
     form = SavedPatternForm()
     if request.method == "POST":
         form = SavedPatternForm(request.POST)
@@ -50,6 +54,7 @@ def pattern_detail(request, pk):
 
 
 def _saved_pattern_payloads():
+    # Keep the simulator responsive by limiting the initial database payload.
     return [_pattern_payload(pattern) for pattern in SavedPattern.objects.all()[:50]]
 
 

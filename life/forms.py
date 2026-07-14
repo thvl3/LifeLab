@@ -1,3 +1,5 @@
+"""Validation for patterns submitted by the browser-based simulator."""
+
 import json
 
 from django import forms
@@ -20,6 +22,8 @@ class SavedPatternForm(forms.ModelForm):
         }
 
     def clean_cells_payload(self):
+        # The canvas serializes live cells as [row, column] pairs. Validate the
+        # shape and size before storing the client-provided JSON in SQLite.
         payload = self.cleaned_data["cells_payload"]
         try:
             cells = json.loads(payload)

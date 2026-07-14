@@ -1,3 +1,5 @@
+"""Preset rules and patterns displayed by the simulator."""
+
 RULESETS = [
     {
         "name": "Conway Classic",
